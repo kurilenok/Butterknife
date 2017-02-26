@@ -1,5 +1,6 @@
 package numisoft.org.butterknife;
 
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,9 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import butterknife.BindColor;
+import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,18 +25,18 @@ public class MainActivityFragment extends Fragment {
 
     @BindView(R.id.editText)
     EditText editText;
-
     @BindView(R.id.textView)
     TextView textView;
-
     @BindColor(R.color.colorAccent)
     int accent;
-
     @BindColor(R.color.colorPrimaryDark)
     int dark;
-
     @BindString(R.string.label)
     String label;
+    @BindDrawable(R.drawable.coins)
+    Drawable coins;
+    @BindView(R.id.imageView)
+    ImageView imageView;
 
     public MainActivityFragment() {
     }
@@ -54,5 +57,6 @@ public class MainActivityFragment extends Fragment {
     public void onSubmit() {
         textView.setText(editText.getText());
         textView.setTextColor(dark);
+        imageView.setImageDrawable(coins);
     }
 }
