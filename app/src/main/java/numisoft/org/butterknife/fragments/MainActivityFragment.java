@@ -1,4 +1,4 @@
-package numisoft.org.butterknife;
+package numisoft.org.butterknife.fragments;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -23,6 +23,8 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import numisoft.org.butterknife.R;
+import numisoft.org.butterknife.activities.TabActivity;
 
 /**
  * A placeholder fragment containing a simple view.

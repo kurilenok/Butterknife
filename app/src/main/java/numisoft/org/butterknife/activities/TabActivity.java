@@ -1,25 +1,32 @@
-package numisoft.org.butterknife;
+package numisoft.org.butterknife.activities;
 
-import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class TabActivity extends AppCompatActivity {
+import numisoft.org.butterknife.R;
+import numisoft.org.butterknife.adapters.SectionsPagerAdapter;
+import numisoft.org.butterknife.fragments.EventsFragment;
+import numisoft.org.butterknife.fragments.VenuesFragment;
+import numisoft.org.butterknife.models.Event;
+import numisoft.org.butterknife.models.Venue;
+
+public class TabActivity extends AppCompatActivity implements
+        VenuesFragment.OnVenuesFragmentClickListener,
+        EventsFragment.OnEventsFragmentClickListener
+{
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -90,6 +97,28 @@ public class TabActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void OnVenuesFragmentClick(Venue venue) {
+        Snackbar.make(mViewPager, venue.getName(), Snackbar.LENGTH_LONG)
+                .setAction("Undo", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(TabActivity.this, "!!!!", Toast.LENGTH_LONG).show();
+                    }
+                }).show();
+    }
+
+    @Override
+    public void OnEventsFragmentClick(Event event) {
+        Snackbar.make(mViewPager, event.getDate(), Snackbar.LENGTH_LONG)
+                .setAction("Undo", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(TabActivity.this, "!!!!", Toast.LENGTH_LONG).show();
+                    }
+                }).show();
+    }
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -125,40 +154,4 @@ public class TabActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
-        }
-
-        @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 3;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "SECTION 1";
-                case 1:
-                    return "SECTION 2";
-                case 2:
-                    return "SECTION 3";
-            }
-            return null;
-        }
-    }
 }
