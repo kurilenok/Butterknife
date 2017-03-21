@@ -1,38 +1,27 @@
 package numisoft.org.butterknife.activities;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.PersistableBundle;
+import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.widget.TextView;
-import android.widget.Toast;
 
 import numisoft.org.butterknife.R;
-import numisoft.org.butterknife.adapters.SectionsPagerAdapter;
-import numisoft.org.butterknife.fragments.EventsFragment;
-import numisoft.org.butterknife.fragments.QueensFragment;
-import numisoft.org.butterknife.fragments.VenuesFragment;
-import numisoft.org.butterknife.models.Event;
-import numisoft.org.butterknife.models.Queen;
-import numisoft.org.butterknife.models.Sections;
-import numisoft.org.butterknife.models.Venue;
 
-public class TabActivity extends AppCompatActivity implements
-        VenuesFragment.OnVenuesFragmentClickListener,
-        EventsFragment.OnEventsFragmentClickListener,
-        QueensFragment.OnQueensFragmentClickListener {
+public class FabTestActivity extends AppCompatActivity {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -49,17 +38,13 @@ public class TabActivity extends AppCompatActivity implements
      */
     private ViewPager mViewPager;
 
-    private int currentSection;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tab);
+        setContentView(R.layout.activity_fab_test);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -75,21 +60,7 @@ public class TabActivity extends AppCompatActivity implements
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String snackText = "";
-                switch (mViewPager.getCurrentItem()) {
-                    case 0:
-                        snackText = Sections.EVENTS.getTitle();
-                        break;
-                    case 1:
-                        snackText = Sections.QUEENS.getTitle();
-                        break;
-                    case 2:
-                        snackText = Sections.VENUES.getTitle();
-                        break;
-
-                }
-
-                Snackbar.make(view, snackText, Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -100,7 +71,7 @@ public class TabActivity extends AppCompatActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_tab, menu);
+        getMenuInflater().inflate(R.menu.menu_fab_test, menu);
         return true;
     }
 
@@ -117,46 +88,6 @@ public class TabActivity extends AppCompatActivity implements
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void OnVenuesFragmentClick(Venue venue) {
-        Snackbar.make(mViewPager, venue.getName(), Snackbar.LENGTH_LONG)
-                .setAction("Undo", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(TabActivity.this, "!!!!", Toast.LENGTH_LONG).show();
-                    }
-                }).show();
-    }
-
-    @Override
-    public void OnEventsFragmentClick(Event event) {
-        Snackbar.make(mViewPager, event.getDate(), Snackbar.LENGTH_LONG)
-                .setAction("Undo", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(TabActivity.this, "!!!!", Toast.LENGTH_LONG).show();
-                    }
-                }).show();
-    }
-
-    @Override
-    public void OnQueensFragmentClick(Queen queen) {
-
-        currentSection = mViewPager.getCurrentItem();
-
-        Intent intent = new Intent(this, DetailsActivity.class);
-        startActivity(intent);
-
-
-//        Snackbar.make(mViewPager, queen.getName(), Snackbar.LENGTH_LONG)
-//                .setAction("Undo", new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        Toast.makeText(TabActivity.this, "!!!!", Toast.LENGTH_LONG).show();
-//                    }
-//                }).show();
     }
 
     /**
@@ -187,11 +118,47 @@ public class TabActivity extends AppCompatActivity implements
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_tab, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_fab_test, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             return rootView;
         }
     }
 
+    /**
+     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+     * one of the sections/tabs/pages.
+     */
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        public SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            // getItem is called to instantiate the fragment for the given page.
+            // Return a PlaceholderFragment (defined as a static inner class below).
+            return PlaceholderFragment.newInstance(position + 1);
+        }
+
+        @Override
+        public int getCount() {
+            // Show 3 total pages.
+            return 3;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return "SECTION 1";
+                case 1:
+                    return "SECTION 2";
+                case 2:
+                    return "SECTION 3";
+            }
+            return null;
+        }
+    }
 }

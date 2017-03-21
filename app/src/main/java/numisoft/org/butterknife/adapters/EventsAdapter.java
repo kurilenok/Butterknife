@@ -13,62 +13,72 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import numisoft.org.butterknife.R;
-import numisoft.org.butterknife.fragments.EventsFragment;
+import numisoft.org.butterknife.fragments.EventsFragment.OnEventsFragmentClickListener;
 import numisoft.org.butterknife.models.Event;
 
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
 
-    private final List<Event> mValues = new ArrayList<>();
-    private final EventsFragment.OnEventsFragmentClickListener eventsListener;
+    private final List<Event> events = new ArrayList<>();
+    private final OnEventsFragmentClickListener eventsListener;
 
-    public EventsAdapter(EventsFragment.OnEventsFragmentClickListener listener) {
-//        mValues = items;
-
+    public EventsAdapter(OnEventsFragmentClickListener listener) {
         FirebaseDatabase db = FirebaseDatabase.getInstance();
-        DatabaseReference venues = db.getReference("events");
+        DatabaseReference eventsRef = db.getReference("events");
 
-        venues.addChildEventListener(new ChildEventListener() {
+        eventsRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Event event = dataSnapshot.getValue(Event.class);
-                mValues.add(event);
+                addEvent(dataSnapshot);
                 notifyDataSetChanged();
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                removeEvent(dataSnapshot.getKey());
+                addEvent(dataSnapshot);
+                notifyDataSetChanged();
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Event event = dataSnapshot.getValue(Event.class);
-                for (Event e : mValues) {
-                    if (event.equals(e)) {
-                        mValues.remove(e);
-                        notifyDataSetChanged();
-                        return;
-                    }
-                }
+                removeEvent(dataSnapshot.getKey());
+                notifyDataSetChanged();
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
 
         eventsListener = listener;
+    }
+
+
+
+    private void addEvent(DataSnapshot dataSnapshot) {
+        Event event = dataSnapshot.getValue(Event.class);
+        event.setKey(dataSnapshot.getKey());
+        events.add(event);
+        Collections.sort(events);
+    }
+
+    private void removeEvent(String key) {
+        for (Event e : events) {
+            if (key.equals(e.getKey())) {
+                events.remove(e);
+                break;
+            }
+        }
     }
 
     @Override
@@ -80,7 +90,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final Event event = mValues.get(position);
+        final Event event = events.get(position);
         holder.mIdView.setText(event.getDate());
 
         String venueName = event.getEvent_venue().values().iterator().next();
@@ -101,8 +111,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             @Override
             public void onClick(View v) {
                 if (null != eventsListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
                     eventsListener.OnEventsFragmentClick(event);
                 }
             }
@@ -111,7 +119,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return events.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -119,7 +127,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         public final TextView mIdView;
         public final TextView mContentView;
         public final TextView eventsCount;
-//        public Event mItem;
 
         public ViewHolder(View view) {
             super(view);

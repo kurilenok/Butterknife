@@ -3,15 +3,18 @@ package numisoft.org.butterknife.adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import numisoft.org.butterknife.fragments.EventsFragment;
+import numisoft.org.butterknife.fragments.QueensFragment;
 import numisoft.org.butterknife.fragments.VenuesFragment;
+import numisoft.org.butterknife.models.Sections;
 
 /**
  * Created by kukolka on 3/19/2017.
  */
 
-public class SectionsPagerAdapter extends FragmentPagerAdapter {
+public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
     public SectionsPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -24,7 +27,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return EventsFragment.newInstance(1);
             case 1:
-                return VenuesFragment.newInstance(1);
+                return QueensFragment.newInstance(1);
             case 2:
                 return VenuesFragment.newInstance(1);
         }
@@ -36,7 +39,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        // Show 3 total pages.
         return 3;
     }
 
@@ -44,12 +46,14 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return "EVENTS";
+                return Sections.EVENTS.getTitle();
             case 1:
-                return "QUEENS";
+                return Sections.QUEENS.getTitle();
             case 2:
-                return "VENUES";
+                return Sections.VENUES.getTitle();
         }
         return null;
+
+
     }
 }

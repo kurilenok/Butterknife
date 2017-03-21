@@ -1,12 +1,16 @@
 package numisoft.org.butterknife.models;
 
+import android.support.annotation.NonNull;
+
 import java.util.Map;
 
 /**
  * Created by kukolka on 3/20/2017.
  */
 
-public class Event {
+public class Event implements Comparable<Event>{
+
+    private String key;
 
     private String date;
     private Map<String, String> event_venue;
@@ -39,6 +43,14 @@ public class Event {
         this.event_queens = event_queens;
     }
 
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (object == null) return false;
@@ -52,5 +64,10 @@ public class Event {
             return true;
         else return false;
 
+    }
+
+    @Override
+    public int compareTo(@NonNull Event event) {
+        return this.getDate().compareTo(event.getDate());
     }
 }

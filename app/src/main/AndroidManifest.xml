@@ -14,6 +14,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -26,6 +27,19 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="numisoft.org.butterknife.activities.MainActivity" />
         </activity>
+        <activity
+            android:name=".activities.DetailsActivity"
+            android:label="@string/title_activity_details"
+            android:parentActivityName=".activities.TabActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="numisoft.org.butterknife.activities.TabActivity" />
+        </activity>
+        <activity
+            android:name=".activities.FabTestActivity"
+            android:label="@string/title_activity_fab_test"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -13,9 +13,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import numisoft.org.butterknife.R;
 import numisoft.org.butterknife.fragments.VenuesFragment.OnVenuesFragmentClickListener;
 import numisoft.org.butterknife.models.Venue;
@@ -23,52 +26,59 @@ import numisoft.org.butterknife.models.Venue;
 
 public class VenuesAdapter extends RecyclerView.Adapter<VenuesAdapter.ViewHolder> {
 
-    private final List<Venue> mValues = new ArrayList<>();
+    private final List<Venue> venues = new ArrayList<>();
     private final OnVenuesFragmentClickListener venuesClickListner;
 
     public VenuesAdapter(OnVenuesFragmentClickListener listener) {
-//        mValues = items;
-
         FirebaseDatabase db = FirebaseDatabase.getInstance();
-        DatabaseReference venues = db.getReference("venues");
+        DatabaseReference venuesRef = db.getReference("venues");
 
-        venues.addChildEventListener(new ChildEventListener() {
+        venuesRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Venue venue = dataSnapshot.getValue(Venue.class);
-                mValues.add(venue);
+                addVenue(dataSnapshot);
                 notifyDataSetChanged();
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                removeVenue(dataSnapshot.getKey());
+                addVenue(dataSnapshot);
+                notifyDataSetChanged();
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Venue venue = dataSnapshot.getValue(Venue.class);
-                for (Venue v : mValues) {
-                    if (venue.equals(v)) {
-                        mValues.remove(v);
-                        notifyDataSetChanged();
-                        return;
-                    }
-                }
+                removeVenue(dataSnapshot.getKey());
+                notifyDataSetChanged();
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
 
         venuesClickListner = listener;
+    }
+
+    private void removeVenue(String key) {
+        for (Venue v : venues) {
+            if (key.equals(v.getKey())) {
+                venues.remove(v);
+                break;
+            }
+        }
+    }
+
+    private void addVenue(DataSnapshot dataSnapshot) {
+        Venue venue = dataSnapshot.getValue(Venue.class);
+        venue.setKey(dataSnapshot.getKey());
+        venues.add(venue);
+        Collections.sort(venues);
     }
 
     @Override
@@ -80,7 +90,7 @@ public class VenuesAdapter extends RecyclerView.Adapter<VenuesAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final Venue venue = mValues.get(position);
+        final Venue venue = venues.get(position);
         holder.mIdView.setText(venue.getName());
         holder.mContentView.setText(venue.getLocation());
 
@@ -99,8 +109,6 @@ public class VenuesAdapter extends RecyclerView.Adapter<VenuesAdapter.ViewHolder
             @Override
             public void onClick(View v) {
                 if (null != venuesClickListner) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
                     venuesClickListner.OnVenuesFragmentClick(venue);
                 }
             }
@@ -109,21 +117,35 @@ public class VenuesAdapter extends RecyclerView.Adapter<VenuesAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return venues.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.venue_id)
+        TextView mIdView;
+
+        @BindView(R.id.venue_content)
+        TextView mContentView;
+
+        @BindView(R.id.venue_eventsCount)
+        TextView eventsCount;
+
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public final TextView eventsCount;
+//        public final TextView mIdView;
+//        public final TextView mContentView;
+//        public final TextView eventsCount;
 
         public ViewHolder(View view) {
             super(view);
+            ButterKnife.bind(this, view);
+
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.venue_id);
-            mContentView = (TextView) view.findViewById(R.id.venue_content);
-            eventsCount = (TextView) view.findViewById(R.id.venue_eventsCount);
+//            mIdView = (TextView) view.findViewById(R.id.venue_id);
+//            mContentView = (TextView) view.findViewById(R.id.venue_content);
+//            eventsCount = (TextView) view.findViewById(R.id.venue_eventsCount);
+
+
         }
 
         @Override
